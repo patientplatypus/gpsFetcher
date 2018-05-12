@@ -1,7 +1,16 @@
 import json
 import math
+import emoji
+
+from UserInput import *
+    
 
 def main():
+    welcomescreen.welcome()
+
+
+
+def pythonCleaner():
     print("inside pythonCleaner!")
 
     # first write to latLngArray array
