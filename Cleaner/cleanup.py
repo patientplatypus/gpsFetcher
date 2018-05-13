@@ -1,31 +1,37 @@
+import os
 import json
+dirname = os.path.dirname(__file__)
 import math
-import emoji
 
-from UserInput import *
-from Requests import *
-from Cleaner import *
+from DataClass import *
 
+def superFresh():
+    print("inside superFresh cleanup utility")
+    print("now with scrubbing bubbles")
+
+    for x in range(0, len(coordArrayData().coordArray)-1):
+        superMunge(x)
     
+    masterOut = []
 
-def main():
-    welcomescreen.welcome()
-    getnodes.postToOSRM()
-    turbohacker.goTurbo()
-    cleanup.superFresh()
+    for x in range(0, len(coordArrayData().coordArray)-1):
+        openFileName = '/../assets/coordout'+str(x)+'.txt'
+        with open(dirname + openFileName) as json_data:
+            d = json.load(json_data)
+            masterOut.append(d)
+    openFileName = '/../assets/coordoutFinal.json'
+    with open(dirname + openFileName, 'w') as outfile:
+        json.dump(masterOut[0], outfile)
+        
 
 
-
-def pythonCleaner():
-    print("inside pythonCleaner!")
-
-    # first write to latLngArray array
-
+def superMunge(mungeIndex):
     latLngArray = []
-    elementslen = None
-    d = None
-    with open('coordfile2.json') as json_data:
+    openFileName = '/../assets/savecoord'+str(mungeIndex)+'.txt'
+    with open(dirname + openFileName) as json_data:
         d = json.load(json_data)
+        # dl = json.loads
+        print(d)
         print(d["elements"][0]["lat"])
         elementslen = len(d["elements"])
         print(elementslen)
@@ -33,19 +39,34 @@ def pythonCleaner():
         print(d["elements"][x]["lat"])
         point = {'lat': d["elements"][x]["lat"], 'lng': d["elements"][x]["lon"]}
         latLngArray.append(point)
+    
     print('after for loop and value of latLngArray:')
     print(latLngArray)
 
-    # get index of first point
-
-    # 30.1945795 / -97.73755 starting coordinate!
+    print('adding back in original requested points')
+    point = {'lat': coordArrayData().coordArray[mungeIndex]['lat'], 'lng': coordArrayData().coordArray[mungeIndex]['lng']}
+    latLngArray.append(point)
 
     firstPtIndex = None
     orderedArray = []
-    # math.pow math.sqrt
     
     for x in range(0, len(latLngArray)):
-        if latLngArray[x]['lat']==30.1945795 and latLngArray[x]['lng']==-97.73755:
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        print("value of mungeIndex")
+        print(mungeIndex)
+        print("coordArrayData().coordArray")
+        print(coordArrayData().coordArray)
+        print("coordArrayData().coordArray[mungeIndex]['lat']")
+        print(coordArrayData().coordArray[mungeIndex]['lat'])
+        print("latLngArray[x]['lat']")
+        print(latLngArray[x]['lat'])
+        print("coordArrayData().coordArray[mungeIndex]['lng']")
+        print(coordArrayData().coordArray[mungeIndex]['lng'])
+        print("latLngArray[x]['lng']")
+        print(latLngArray[x]['lng'])
+        print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+        if latLngArray[x]['lat']==coordArrayData().coordArray[mungeIndex]["lat"] and latLngArray[x]['lng']==coordArrayData().coordArray[mungeIndex]["lng"]:
+            print("inside IF STATEMENT for x loop of ordering")
             firstPtIndex = x
             orderedArray.append(latLngArray[x])
             break
@@ -87,6 +108,10 @@ def pythonCleaner():
         print('*****************************************************')
         print('starting new loop through')
         print('*****************************************************')
+        print('len(orderedArray)')
+        print(len(orderedArray))
+        print('len(orderedArray)-1')
+        print(str(len(orderedArray)-1))
         nextPt(orderedArray[len(orderedArray)-1], len(orderedArray))
 
     print('*****************************************************')
@@ -99,9 +124,7 @@ def pythonCleaner():
     print('dumping JSON')
     print('*****************************************************')    
 
-    with open('coordout.json', 'w') as outfile:
-        json.dump(orderedArray, outfile)
-    
+    openFileName = '/../assets/coordout'+str(mungeIndex)+'.txt'
 
-if __name__=="__main__":
-    main()
+    with open(dirname + openFileName, 'w') as outfile:
+        json.dump(orderedArray, outfile)
