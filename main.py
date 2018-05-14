@@ -68,7 +68,7 @@ def pythonCleaner():
             comparingPt = latLngArray[x]
             alreadyInArray = inOrderedArray(comparingPt, orderedArraylength)
             if not alreadyInArray:
-                ptDistance = math.sqrt(math.pow((testingPt['lat']-comparingPt['lat']),2)+math.pow((testingPt['lat']-comparingPt['lat']),2))
+                ptDistance = math.sqrt(math.pow((testingPt['lat']-comparingPt['lat']),2)+math.pow((testingPt['lng']-comparingPt['lng']),2))
                 if ptDistance<distance:
                     distance = ptDistance
                     svPt = comparingPt 
