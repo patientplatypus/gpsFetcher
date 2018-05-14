@@ -18,8 +18,8 @@ def superFresh():
         openFileName = '/../assets/coordout'+str(x)+'.txt'
         with open(dirname + openFileName) as json_data:
             d = json.load(json_data)
-            masterOut.append(d)
-    openFileName = '/../assets/coordoutFinal.json'
+            masterOut.extend(d)
+    openFileName = '/../assets/coordoutFinal.txt'
     with open(dirname + openFileName, 'w') as outfile:
         json.dump(masterOut, outfile)
         
@@ -43,6 +43,9 @@ def superMunge(mungeIndex):
     orderedArray.append(point)
 
     getFromLatLngArray = latLngArray
+    numSkipped = 0
+    avgVal = 0
+    avgCounter = 0
 
     while len(getFromLatLngArray)>0:
         compareToPoint = orderedArray[len(orderedArray)-1]
@@ -52,6 +55,9 @@ def superMunge(mungeIndex):
         print(orderedArray)
         distance = 9999999999
         svPt = None
+        avgCounter = 0
+        avgDist = 1
+        distTotal = 0
         for x in range(0, len(getFromLatLngArray)):
             compareIngPoint = getFromLatLngArray[x]
             print('compareIngPoint')
@@ -60,10 +66,16 @@ def superMunge(mungeIndex):
             print(compareToPoint)
             if not (math.isclose(compareToPoint['lat'], compareIngPoint['lat'], abs_tol=0.000001) and math.isclose(compareToPoint['lng'], compareIngPoint['lng'], abs_tol=0.000001)):
                 ptDistance = math.sqrt(math.pow((compareIngPoint['lat']-compareToPoint['lat']),2)+math.pow((compareIngPoint['lng']-compareToPoint['lng']),2))
-                if distance>ptDistance:
+                if distance>ptDistance: #and (distance<10*avgDist or avgCounter<20):
                     print('inside distance > ptDistance')
                     distance = ptDistance
                     svPt = compareIngPoint
+                    # distTotal = distance + distTotal
+                    # avgCounter = avgCounter + 1
+                    # avgDist = distTotal/avgCounter
+                # if distance>=10*avgDist and distance != 9999999999:
+                #     numSkipped = numSkipped+1
+        # if svPt is not None:
         getFromLatLngArray.remove(svPt)
         orderedArray.append(svPt)
 
